@@ -39,7 +39,7 @@ This report covers the penetration testing engagement conducted against Mediroza
 # Project Milestones & Security Disclaimer
 
 > **Disclaimer:** This documentation and all associated activities are strictly intended for educational and defensive security research purposes. All testing was conducted exclusively on authorized environments or systems with explicit permission. The author assumes full personal responsibility for all actions taken and disclaims any liability for misuse. This knowledge must never be used for unauthorized access, malicious activities, or illegal operations.
-
+> 
 | Milestone | Objective & Methodology | Discovery & Outcomes |
 | :--- | :--- | :--- |
 | **M1** | Initial access, reconnaissance, and vulnerability scoping. | Open ports, exposed services, attack surface mapping, and potential entry vectors. |
@@ -47,15 +47,17 @@ This report covers the penetration testing engagement conducted against Mediroza
 | **M3** | Identification and documentation of critical internal data exposure. | Sensitive patient or internal administrative files, misconfigured shares, and privilege escalation paths. |
 | **M4** | Compilation of findings into professional reporting and mitigation summaries. | Comprehensive risk breakdown, executive summaries, and actionable remediation steps. |
 
-## 🧰 3. Tools Used
-The table below lists each tool and technique utilized during this engagement and its purpose.
+---
 
-| Tool / Technique | Purpose |
+## 🛠️ 3. Tools & Technologies Used
+
+| Tool / Technique | Purpose / Function |
 | :--- | :--- |
-| **🌐 Web Browser / Reconn Tools** | Surface mapping and initial access discovery against the target domain |
-| **🔑 Password Recovery Utilities** | Brute-forcing and cracking encryption on retrieved confidential PDF files |
-| **📁 Metadata & Property Analysis** | Deep inspection of file properties and hidden server directories to uncover sensitive internal data |
-| **📝 Reporting Frameworks** | Documenting findings, risk ratings, and actionable remediation guidelines |
+| **💻 Kali Linux / Virtual Environment** | Isolated operating system environment utilized for security tooling, command-line operations, and safe lab execution. |
+| **🌐 Web Browser / Recon Tools** | Surface mapping and initial access discovery against the target domain. |
+| **🔑 Password Recovery Utilities** | Brute-forcing and cracking encryption on retrieved confidential PDF files. |
+| **📁 Metadata & Property Analysis** | Deep inspection of file properties and hidden server directories to uncover sensitive internal data. |
+| **📝 Reporting Frameworks** | Documenting findings, risk ratings, and actionable remediation guidelines. |
 
 ---
 
