@@ -23,7 +23,7 @@
 | **📂 Modules Completed** | Week 4: Mediroza General Hospital Penetration Test (Milestones 1 to 4) |
 | **🎯 Client/Target** | `https://medirozahospital.com` (written permission secured) |
 | **✍️ Permission Secured?** | ✅ Yes |
-| **🔍 Scope & Objective** | Full black-box pentest. Identify vulnerabilities, exploit for real impact, and report. |
+| **🔍 Scope & Objective** | Full black-box penetration test. Identify vulnerabilities, exploit for real impact, and document findings. |
 
 ---
 
@@ -33,89 +33,61 @@
 ---
 
 ## 🚀 2. Introduction
-This report covers the penetration testing engagement conducted against Mediroza General Hospital (`https://medirozahospital.com`) during Week 4 of my ongoing cybersecurity internship program at Networkwalks. The assessment followed a full black-box methodology across four progressive milestones—ranging from initial reconnaissance and access control bypass, through cryptographic password cracking, to uncovering critical server-side internal data exposures (such as staff salaries and shareholder records).
+This report covers the comprehensive penetration testing engagement conducted against Mediroza General Hospital (`https://medirozahospital.com`) during Week 4 of my ongoing cybersecurity internship program at Networkwalks. The assessment followed a strict full black-box methodology across four progressive milestones—ranging from initial reconnaissance, infrastructure discovery, and access control bypass, through cryptographic password cracking, to uncovering critical server-side internal data exposures (such as staff salaries and shareholder records).
 
 ---
-# Project Milestones & Security Disclaimer
-
-> **Disclaimer:** This documentation and all associated activities are strictly intended for educational and defensive security research purposes. All testing was conducted exclusively on authorized environments or systems with explicit permission. The author assumes full personal responsibility for all actions taken and disclaims any liability for misuse. This knowledge must never be used for unauthorized access, malicious activities, or illegal operations.
-> 
-| Milestone | Objective & Methodology | Discovery & Outcomes |
-| :--- | :--- | :--- |
-| **M1** | Initial access, reconnaissance, and vulnerability scoping. | Open ports, exposed services, attack surface mapping, and potential entry vectors. |
-| **M2** | Data extraction and cryptographic hash cracking. | Extracted user records, database structures, and cracked plaintext credentials from hashes. |
-| **M3** | Identification and documentation of critical internal data exposure. | Sensitive patient or internal administrative files, misconfigured shares, and privilege escalation paths. |
-| **M4** | Compilation of findings into professional reporting and mitigation summaries. | Comprehensive risk breakdown, executive summaries, and actionable remediation steps. |
-
----
-
-## 🛠️ 3. Tools & Technologies Used
-
-| Tool / Technique | Purpose / Function |
-| :--- | :--- |
-| **💻 Kali Linux / Virtual Environment** | Isolated operating system environment utilized for security tooling, command-line operations, and safe lab execution. |
-| **🌐 Web Browser / Recon Tools** | Surface mapping and initial access discovery against the target domain. |
-| **🔑 Password Recovery Utilities** | Brute-forcing and cracking encryption on retrieved confidential PDF files. |
-| **📁 Metadata & Property Analysis** | Deep inspection of file properties and hidden server directories to uncover sensitive internal data. |
-| **📝 Reporting Frameworks** | Documenting findings, risk ratings, and actionable remediation guidelines. |
-
----
-
-## ⚙️ 4. Activities Performed
-The assessment was executed independently, structured around four core milestones:
-## 🔬 Project Milestones & Technical Breakdown
+## 🔬 3. Project Milestones & Technical Breakdown
 
 ### 🎯 Milestone 1: Initial Access & Reconnaissance
 * **Target Domain:** `medirozahospital.com` (`199.188.201.16`)
-* **Methodology:** Black-box web assessment and infrastructure enumeration (no prior credentials or source code provided).
+* **Methodology:** Black-box web assessment and infrastructure enumeration (conducted with zero prior credentials or application source code provided).
 * **Active Reconnaissance Findings:**
-  * **Network Port Scanning (`nmap -sV`):** Identified open ports and running services including FTP (Port 21, Pure-FTPd), DNS (Port 53, BIND), HTTP/HTTPS proxies (Ports 80 & 443, HAProxy 2.0.8), and mail services (POP3/IMAP/SMTP via Dovecot and Exim).
-  <img src="Evidence files/nmap_screenshot.png" width="800">
-    
-  * **WAF Fingerprinting (`wafw00f`):** Probed the target web application and confirmed that no active Web Application Firewall (WAF) was detected (`No WAF detected by the generic detection`).
-    <img src="Evidence files/Curl_Wafw00f_screenshots.png" width="800">
-    
+  * **Network Port Scanning (`nmap -sV`):** Successfully identified open ports and running services across the target infrastructure, including FTP (Port 21, Pure-FTPd), DNS (Port 53, BIND), HTTP/HTTPS proxies (Ports 80 & 443, HAProxy 2.0.8), and mail services (POP3/IMAP/SMTP via Dovecot and Exim).
+    <img src="Evidence%20files/nmap_screenshot.png" width="800">
+ * **HTTP Probing & WAF Detection (`curl`, `wafw00f`):** Used `curl` requests to inspect server headers and deployed `wafw00f` against the web application, confirming that no active Web Application Firewall (WAF) was deployed (`No WAF detected by the generic detection`).
+    <img src="Evidence%20files/Curl_Wafw00f_screenshots.png" width="800">
+    <img src="Evidence%20files/Curl_Wafw00f_screenshots.png" width="800">
   * **DNS Enumeration (`nslookup`, `dig`, `dnsrecon`):** Mapped authoritative name servers and mail exchange routing records (`mx1-hosting.jellyfish.systems`) hosted via web infrastructure (`server274.web-hosting.com`).
- <img src="Evidence%20files/nslookup_dig_screenshorts.png" width="800">
- <img src="Evidence%20files/dnsrecon_screenshot.png" width="800">
-    
-* **Attack Execution & Access Bypass:** Analyzed web application workflows to locate exposed entry points. Leveraged application input handling weaknesses to bypass standard session constraints and achieve unauthorized access to the restricted portal.
-  <img src="Evidence%20files/Patient_login_screenshot.png" width="800">
-  
-* **Milestone Deliverable:** Successfully retrieved **3 confidential patient PDF lab reports** (noted as password-protected/encrypted, leading directly into Milestone 2).
-<img src="Evidence%20files/Lab_Reports_screenshot.png" width="800">
----
+    <img src="Evidence%20files/nslookup_dig_screenshorts.png" width="800">
+    <img src="Evidence%20files/dnsrecon_screenshot.png" width="800">
+
+* **Attack Execution & SQL Injection Discovery:** 
+  * While analyzing the Patient Portal login functionality (`/patient/login.php`), input fields were tested for improper escaping. Entering specialized characters triggered an explicit database warning: `Warning: mysqli_query(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\'' at line 1`.
+    <img src="Evidence%20files/syntax_error.png" width="800">
+  * This error confirms that the application directly concatenates user input into backend SQL queries without parameterization, exposing a high-severity SQL Injection vulnerability that facilitates authentication bypass.
+
+* **Milestone Deliverable:** Successfully identified the injection vector and retrieved **3 confidential patient PDF lab reports** following access bypass.
+  <img src="Evidence%20files/Lab_Reports_screenshot.png" width="800">
 
 ### 🔑 Milestone 2: Data Extraction & Cryptographic Cracking
-* **Objective:** Crack the encryption protecting all 3 retrieved patient PDF lab reports.
-* **Methodology:** File encryption analysis and password recovery.
+* **Objective:** Crack the cryptographic encryption protecting all 3 retrieved patient PDF lab reports.
+* **Methodology:** File encryption analysis and targeted password recovery.
 * **Execution & Challenges:** 
-  * Analyzed the encryption scheme protecting each document to determine the appropriate cracking approach.
-  * Tested various tools and targeted wordlists, recognizing that a single brute-force approach would not succeed uniformly across all files.
-<img src="Evidence%20files/Pdf1_password_screenshot.png" width="800">
-<img src="Evidence%20files/Pdf2_password_screenshot.png" width="800">
-<img src="Evidence%20files/Pdf3_password_screenshot.png" width="800">
-
+  * Analyzed the specific encryption scheme protecting each document to determine the appropriate cracking methodology.
+  * Tested various tools and customized wordlists, recognizing that a single brute-force approach would not succeed uniformly across all files.
+  <img src="Evidence%20files/Pdf1_password_screenshot.png" width="800">
+  <img src="Evidence%20files/Pdf2_password_screenshot.png" width="800">
+  <img src="Evidence%20files/Pdf3_password_screenshot.png" width="800">
 * **Milestone Deliverable:** Successfully recovered the plaintext contents of all 3 restricted files with verifiable proof of access.
-<img src="Evidence%20files/Patient_report1_screenshot.png" width="800">
-<img src="Evidence%20files/Patient_report2_screenshot.png" width="800">
-<img src="Evidence%20files/Patient_report3_screenshot.png" width="800">
+  <img src="Evidence%20files/Patient_report1_screenshot.png" width="800">
+  <img src="Evidence%20files/Patient_report2_screenshot.png" width="800">
+  <img src="Evidence%20files/Patient_report3_screenshot.png" width="800">
+
 ---
 
 ### 📂 Milestone 3: Critical Data Exposure
 * **Objective:** Uncover critical internal server-side data exposures on the client server.
-* **Methodology:** Deep examination of retrieved file properties, metadata, and hidden server directories.
+* **Methodology:** Deep examination of retrieved file properties, metadata, directory enumeration, and hidden server paths.
 * **Findings & Discoveries:**
   * Conducted a thorough analysis beyond the obvious application content, examining all file properties carefully.
     <img src="Evidence%20files/robots.txt.png" width="800">
   * Uncovered sensitive internal administrative files pointing to further critical server exposures.
-  <img src="Evidence%20files/website_old_path.png" width="800">
+    <img src="Evidence%20files/website_old_path.png" width="800">
   * Successfully extracted the **salaries of all hospital employees** and the **shareholder details of the hospital**.
 * **Milestone Deliverable:** Full documented evidence of the server exposure and a readable summary of the confidential financial and corporate records uncovered.
-<img src="Evidence%20files/staffs_info_sql_file.png" width="800">
-<img src="Evidence%20files/shareholders_info_sql_file.png" width="800">
-  
-  
+  <img src="Evidence%20files/staffs_info_sql_file.png" width="800">
+  <img src="Evidence%20files/shareholders_info_sql_file.png" width="800">
+
 ---
 
 ### 📊 Milestone 4: Professional Reporting
@@ -128,7 +100,9 @@ The assessment was executed independently, structured around four core milestone
   * **05. Recommendations and Remediation:** Actionable, technical steps the client must take to fix each identified flaw.
 * **Milestone Deliverable:** A complete professional penetration testing report submitted for the internship evaluation.
 
-## 📊 5. Risk Analysis / Impact
+---
+
+## 📊 4. Risk Analysis / Impact
 Based on the vulnerabilities identified during the engagement, the following risks were assessed:
 
 | # | Risk / Finding | Evidence / Observation | Potential Impact | Risk Level |
@@ -139,7 +113,7 @@ Based on the vulnerabilities identified during the engagement, the following ris
 
 ---
 
-## 🛠️ 6. Recommendations and Remediation
+## 🛠️ 5. Recommendations and Remediation
 Based on the findings from this engagement, the following remediation steps are recommended:
 1. **🛡️ Enforce Strict Access Controls:** Implement robust authentication and authorization checks across all web application endpoints to prevent unauthorized file access.
 2. **🔐 Upgrade File Encryption Standards:** Secure all sensitive documents with modern, robust cryptographic algorithms and avoid weak user-managed passwords.
@@ -149,15 +123,43 @@ Based on the findings from this engagement, the following remediation steps are 
 
 ---
 
-## 📌 7. Conclusion
+## 📌 6. Conclusion
 During Week 4 of my cybersecurity internship at Networkwalks, I successfully completed a full black-box penetration testing engagement against Mediroza General Hospital. Through the four milestones, I gained practical experience in mapping web application vulnerabilities, extracting and decrypting confidential files, uncovering hidden server-side data exposures, and documenting professional-grade security findings. 
 
 The engagement demonstrated that technical vulnerabilities and misconfigurations can lead to severe data breaches if left unaddressed. Proper risk documentation, clear evidence collection, and actionable remediation strategies are critical components of professional cybersecurity reporting. All testing was conducted strictly within the authorized educational scope.
 
 ---
 
-## 📁 8. Evidences Collected
-*(Placeholder for screenshots demonstrating milestone progression, successful access bypass, file decryption outputs, and discovered internal records as required by the practical task deliverables).*
+## 📁 7. Evidences Gallery Index
+
+### 🔍 Milestone 1 Evidence
+* **Network Enumeration & Scanning:**
+  * `nmap_screenshot.png`
+  * `nslookup_dig_screenshorts.png`
+  * `dnsrecon_screenshot.png`
+* **WAF & Target Probing:**
+  * `Curl_Wafw00f_screenshots.png`
+* **Authentication & Access Bypass:**
+  * `Patient_login_screenshot.png`
+  * `Lab_Reports_screenshot.png`
+
+### 🔑 Milestone 2 Evidence
+* **Password Cracking & Decryption:**
+  * `Pdf1_password_screenshot.png`
+  * `Pdf2_password_screenshot.png`
+  * `Pdf3_password_screenshot.png`
+* **Recovered File Contents:**
+  * `Patient_report1_screenshot.png`
+  * `Patient_report2_screenshot.png`
+  * `Patient_report3_screenshot.png`
+
+### 📂 Milestone 3 Evidence
+* **Recon & Enumeration Outputs:**
+  * `robots.txt.png`
+  * `website_old_path.png`
+* **Extracted Sensitive Internal Records:**
+  * `staffs_info_sql_file.png`
+  * `shareholders_info_sql_file.png`
 
 ---
 
