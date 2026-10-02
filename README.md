@@ -44,31 +44,37 @@ This report covers the comprehensive penetration testing engagement conducted ag
 * **Active Reconnaissance Findings:**
   * **Network Port Scanning (`nmap -sV`):** Successfully identified open ports and running services across the target infrastructure, including FTP (Port 21, Pure-FTPd), DNS (Port 53, BIND), HTTP/HTTPS proxies (Ports 80 & 443, HAProxy 2.0.8), and mail services (POP3/IMAP/SMTP via Dovecot and Exim).
     <img src="Evidence%20files/nmap_screenshot.png" width="800">
-*Figure: Running port and service detection scans using nmap -sV*
+    
+    *Figure: Running port and service detection scans using nmap -sV*
 
  * **HTTP Probing & WAF Detection (`curl`, `wafw00f`):** Used `curl` requests to inspect server headers and deployed `wafw00f` against the web application, confirming that no active Web Application Firewall (WAF) was deployed (`No WAF detected by the generic detection`).
     <img src="Evidence%20files/Curl_Wafw00f_screenshots.png" width="800">
+
     <img src="Evidence%20files/Curl_Wafw00f_screenshots.png" width="800">
-*Figure: Checking HTTP server headers and fingerprinting WAF presence using wafw00f*
+    
+    *Figure: Checking HTTP server headers and fingerprinting WAF presence using wafw00f*
 
   * **DNS Enumeration (`nslookup`, `dig`, `dnsrecon`):** Mapped authoritative name servers and mail exchange routing records (`mx1-hosting.jellyfish.systems`) hosted via web infrastructure (`server274.web-hosting.com`).
     <img src="Evidence%20files/nslookup_dig_screenshorts.png" width="800">
-*Figure: Performing DNS lookup and domain queries using nslookup and dig*
+
+    *Figure: Performing DNS lookup and domain queries using nslookup and dig*
 
     <img src="Evidence%20files/dnsrecon_screenshot.png" width="800">
-*Figure: Executing automated DNS enumeration via dnsrecon against medirozahospital.com*
+    
+   *Figure: Executing automated DNS enumeration via dnsrecon against medirozahospital.com*
 
 * **Attack Execution & SQL Injection Discovery:** 
   * While analyzing the Patient Portal login functionality (`/patient/login.php`), input fields were tested for improper escaping. Entering specialized characters triggered an explicit database warning: `Warning: mysqli_query(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\'' at line 1`.
     <img src="Evidence%20files/syntax_error.png" width="800">
   
-*Figure: Executing SQL injection authentication bypass on the Patient Portal login form*
+    *Figure: Executing SQL injection authentication bypass on the Patient Portal login form*
 
   * This error confirms that the application directly concatenates user input into backend SQL queries without parameterization, exposing a high-severity SQL Injection vulnerability that facilitates authentication bypass.
 
 * **Milestone Deliverable:** Successfully identified the injection vector and retrieved **3 confidential patient PDF lab reports** following access bypass.
   <img src="Evidence%20files/Lab_Reports_screenshot.png" width="800">
-*Figure: Accessing the authenticated My Lab Reports dashboard displaying encrypted PDF files*
+  
+   *Figure: Accessing the authenticated My Lab Reports dashboard displaying encrypted PDF files*
 
 ### 🔑 Milestone 2: Data Extraction & Cryptographic Cracking
 * **Objective:** Crack the cryptographic encryption protecting all 3 retrieved patient PDF lab reports.
@@ -81,13 +87,16 @@ This report covers the comprehensive penetration testing engagement conducted ag
   <img src="Evidence%20files/Pdf3_password_screenshot.png" width="800">
 * **Milestone Deliverable:** Successfully recovered the plaintext contents of all 3 restricted files with verifiable proof of access.
   <img src="Evidence%20files/Patient_report1_screenshot.png" width="800">
-*Figure: Viewing the decrypted confidential pathology report for patient Sipho Dlamini*
+  
+  *Figure: Viewing the decrypted confidential pathology report for patient Sipho Dlamini*
 
   <img src="Evidence%20files/Patient_report2_screenshot.png" width="800">
-*Figure: Viewing the decrypted confidential pathology report for patient Priya Reddy*
+  
+  *Figure: Viewing the decrypted confidential pathology report for patient Priya Reddy*
 
   <img src="Evidence%20files/Patient_report3_screenshot.png" width="800">
-*Figure: Viewing the decrypted confidential pathology report for patient Emily Thompson*
+   
+  *Figure: Viewing the decrypted confidential pathology report for patient Emily Thompson*
 
 
 ---
