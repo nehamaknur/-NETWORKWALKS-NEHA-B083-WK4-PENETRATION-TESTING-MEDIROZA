@@ -19,7 +19,7 @@
 | :--- | :--- |
 | **👤 Pentester Name** | Neha Maknur |
 | **🎓 Program/Batch** | B083-Networkwalks Cybersecurity Internship |
-| **📅 Date** | 16 September 2026 |
+| **📅 Date** | 30 September 2026 |
 | **📂 Modules Completed** | Week 4: Mediroza General Hospital Penetration Test (Milestones 1 to 4) |
 | **🎯 Client/Target** | `https://medirozahospital.com` (written permission secured) |
 | **✍️ Permission Secured?** | ✅ Yes |
