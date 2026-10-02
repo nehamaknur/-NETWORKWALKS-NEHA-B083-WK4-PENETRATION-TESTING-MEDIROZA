@@ -64,16 +64,26 @@ This report covers the penetration testing engagement conducted against Mediroza
 ## ⚙️ 4. Activities Performed
 The assessment was executed independently, structured around four core milestones:
 ## 🔬 Project Milestones & Technical Breakdown
+
 ### 🎯 Milestone 1: Initial Access & Reconnaissance
 * **Target Domain:** `medirozahospital.com` (`199.188.201.16`)
 * **Methodology:** Black-box web assessment and infrastructure enumeration (no prior credentials or source code provided).
 * **Active Reconnaissance Findings:**
   * **Network Port Scanning (`nmap -sV`):** Identified open ports and running services including FTP (Port 21, Pure-FTPd), DNS (Port 53, BIND), HTTP/HTTPS proxies (Ports 80 & 443, HAProxy 2.0.8), and mail services (POP3/IMAP/SMTP via Dovecot and Exim).
+  <img src="Evidence files/nmap_screenshot.png" width="800">
+    
   * **WAF Fingerprinting (`wafw00f`):** Probed the target web application and confirmed that no active Web Application Firewall (WAF) was detected (`No WAF detected by the generic detection`).
+    <img src="Evidence files/Curl_Wafw00f_screenshots.png" width="800">
+    
   * **DNS Enumeration (`nslookup`, `dig`, `dnsrecon`):** Mapped authoritative name servers and mail exchange routing records (`mx1-hosting.jellyfish.systems`) hosted via web infrastructure (`server274.web-hosting.com`).
+ <img src="Evidence%20files/nslookup_dig_screenshorts.png" width="800">
+ <img src="Evidence%20files/dnsrecon_screenshot.png" width="800">
+    
 * **Attack Execution & Access Bypass:** Analyzed web application workflows to locate exposed entry points. Leveraged application input handling weaknesses to bypass standard session constraints and achieve unauthorized access to the restricted portal.
+  <img src="Evidence%20files/Patient_login_screenshot.png" width="800">
+  
 * **Milestone Deliverable:** Successfully retrieved **3 confidential patient PDF lab reports** (noted as password-protected/encrypted, leading directly into Milestone 2).
-
+<img src="Evidence%20files/Lab_Reports_screenshot.png" width="800">
 ---
 
 ### 🔑 Milestone 2: Data Extraction & Cryptographic Cracking
@@ -82,8 +92,14 @@ The assessment was executed independently, structured around four core milestone
 * **Execution & Challenges:** 
   * Analyzed the encryption scheme protecting each document to determine the appropriate cracking approach.
   * Tested various tools and targeted wordlists, recognizing that a single brute-force approach would not succeed uniformly across all files.
-* **Milestone Deliverable:** Successfully recovered the plaintext contents of all 3 restricted files with verifiable proof of access.
+<img src="Evidence%20files/Pdf1_password_screenshot.png" width="800">
+<img src="Evidence%20files/Pdf2_password_screenshot.png" width="800">
+<img src="Evidence%20files/Pdf3_password_screenshot.png" width="800">
 
+* **Milestone Deliverable:** Successfully recovered the plaintext contents of all 3 restricted files with verifiable proof of access.
+<img src="Evidence%20files/Patient_report1_screenshot.png" width="800">
+<img src="Evidence%20files/Patient_report2_screenshot.png" width="800">
+<img src="Evidence%20files/Patient_report3_screenshot.png" width="800">
 ---
 
 ### 📂 Milestone 3: Critical Data Exposure
@@ -91,10 +107,15 @@ The assessment was executed independently, structured around four core milestone
 * **Methodology:** Deep examination of retrieved file properties, metadata, and hidden server directories.
 * **Findings & Discoveries:**
   * Conducted a thorough analysis beyond the obvious application content, examining all file properties carefully.
+    <img src="Evidence%20files/robots.txt.png" width="800">
   * Uncovered sensitive internal administrative files pointing to further critical server exposures.
+  <img src="Evidence%20files/website_old_path.png" width="800">
   * Successfully extracted the **salaries of all hospital employees** and the **shareholder details of the hospital**.
 * **Milestone Deliverable:** Full documented evidence of the server exposure and a readable summary of the confidential financial and corporate records uncovered.
-
+<img src="Evidence%20files/staffs_info_sql_file.png" width="800">
+<img src="Evidence%20files/shareholders_info_sql_file.png" width="800">
+  
+  
 ---
 
 ### 📊 Milestone 4: Professional Reporting
