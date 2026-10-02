@@ -63,13 +63,49 @@ This report covers the penetration testing engagement conducted against Mediroza
 
 ## ⚙️ 4. Activities Performed
 The assessment was executed independently, structured around four core milestones:
-
-* **🔓 Milestone 1 (Initial Access & Reconnaissance):** Attacked the target web application, analyzed access control mechanisms, and successfully retrieved 3 confidential patient PDF lab reports. Written permission was verified prior to testing.
-* **🔑 Milestone 2 (Data Extraction & Cryptographic Cracking):** Analyzed the encryption protecting the 3 retrieved files and applied appropriate tools and wordlists to crack the encryption and recover readable contents.
-* **📂 Milestone 3 (Critical Data Exposure):** Conducted a thorough examination of retrieved file properties and hidden server vectors, uncovering critical internal records including hospital staff salaries and shareholder details.
-* **📊 Milestone 4 (Professional Reporting):** Compiled a structured penetration testing report detailing the executive summary, scope, technical findings, risk ratings, and remediation recommendations.
+## 🔬 Project Milestones & Technical Breakdown
+### 🎯 Milestone 1: Initial Access & Reconnaissance
+* **Target Domain:** `medirozahospital.com` (`199.188.201.16`)
+* **Methodology:** Black-box web assessment and infrastructure enumeration (no prior credentials or source code provided).
+* **Active Reconnaissance Findings:**
+  * **Network Port Scanning (`nmap -sV`):** Identified open ports and running services including FTP (Port 21, Pure-FTPd), DNS (Port 53, BIND), HTTP/HTTPS proxies (Ports 80 & 443, HAProxy 2.0.8), and mail services (POP3/IMAP/SMTP via Dovecot and Exim).
+  * **WAF Fingerprinting (`wafw00f`):** Probed the target web application and confirmed that no active Web Application Firewall (WAF) was detected (`No WAF detected by the generic detection`).
+  * **DNS Enumeration (`nslookup`, `dig`, `dnsrecon`):** Mapped authoritative name servers and mail exchange routing records (`mx1-hosting.jellyfish.systems`) hosted via web infrastructure (`server274.web-hosting.com`).
+* **Attack Execution & Access Bypass:** Analyzed web application workflows to locate exposed entry points. Leveraged application input handling weaknesses to bypass standard session constraints and achieve unauthorized access to the restricted portal.
+* **Milestone Deliverable:** Successfully retrieved **3 confidential patient PDF lab reports** (noted as password-protected/encrypted, leading directly into Milestone 2).
 
 ---
+
+### 🔑 Milestone 2: Data Extraction & Cryptographic Cracking
+* **Objective:** Crack the encryption protecting all 3 retrieved patient PDF lab reports.
+* **Methodology:** File encryption analysis and password recovery.
+* **Execution & Challenges:** 
+  * Analyzed the encryption scheme protecting each document to determine the appropriate cracking approach.
+  * Tested various tools and targeted wordlists, recognizing that a single brute-force approach would not succeed uniformly across all files.
+* **Milestone Deliverable:** Successfully recovered the plaintext contents of all 3 restricted files with verifiable proof of access.
+
+---
+
+### 📂 Milestone 3: Critical Data Exposure
+* **Objective:** Uncover critical internal server-side data exposures on the client server.
+* **Methodology:** Deep examination of retrieved file properties, metadata, and hidden server directories.
+* **Findings & Discoveries:**
+  * Conducted a thorough analysis beyond the obvious application content, examining all file properties carefully.
+  * Uncovered sensitive internal administrative files pointing to further critical server exposures.
+  * Successfully extracted the **salaries of all hospital employees** and the **shareholder details of the hospital**.
+* **Milestone Deliverable:** Full documented evidence of the server exposure and a readable summary of the confidential financial and corporate records uncovered.
+
+---
+
+### 📊 Milestone 4: Professional Reporting
+* **Objective:** Compile all findings, evidence, and risk assessments into a professional penetration testing report for the client.
+* **Structure & Deliverables:**
+  * **01. Executive Summary:** A concise overview of the engagement, key findings, and overall risk to the client.
+  * **02. Scope and Methodology:** Target specification, tools utilized, approach taken, and testing limitations.
+  * **03. Findings and Proof of Exploitation:** Comprehensive breakdown of each vulnerability with screenshots and evidence across Milestones 1 through 3.
+  * **04. Risk Rating:** Categorization of vulnerabilities into Critical, High, Medium, or Low with detailed justifications.
+  * **05. Recommendations and Remediation:** Actionable, technical steps the client must take to fix each identified flaw.
+* **Milestone Deliverable:** A complete professional penetration testing report submitted for the internship evaluation.
 
 ## 📊 5. Risk Analysis / Impact
 Based on the vulnerabilities identified during the engagement, the following risks were assessed:
