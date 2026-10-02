@@ -43,6 +43,7 @@ This report covers the comprehensive penetration testing engagement conducted ag
 * **Methodology:** Black-box web assessment and infrastructure enumeration (conducted with zero prior credentials or application source code provided).
 * **Active Reconnaissance Findings:**
   * **Network Port Scanning (`nmap -sV`):** Successfully identified open ports and running services across the target infrastructure, including FTP (Port 21, Pure-FTPd), DNS (Port 53, BIND), HTTP/HTTPS proxies (Ports 80 & 443, HAProxy 2.0.8), and mail services (POP3/IMAP/SMTP via Dovecot and Exim).
+    
     <img src="Evidence%20files/nmap_screenshot.png" width="800">
     
     *Figure: Running port and service detection scans using nmap -sV*
@@ -50,21 +51,21 @@ This report covers the comprehensive penetration testing engagement conducted ag
  * **HTTP Probing & WAF Detection (`curl`, `wafw00f`):** Used `curl` requests to inspect server headers and deployed `wafw00f` against the web application, confirming that no active Web Application Firewall (WAF) was deployed (`No WAF detected by the generic detection`).
     <img src="Evidence%20files/Curl_Wafw00f_screenshots.png" width="800">
 
-    <img src="Evidence%20files/Curl_Wafw00f_screenshots.png" width="800">
-    
     *Figure: Checking HTTP server headers and fingerprinting WAF presence using wafw00f*
 
   * **DNS Enumeration (`nslookup`, `dig`, `dnsrecon`):** Mapped authoritative name servers and mail exchange routing records (`mx1-hosting.jellyfish.systems`) hosted via web infrastructure (`server274.web-hosting.com`).
+    
     <img src="Evidence%20files/nslookup_dig_screenshorts.png" width="800">
 
     *Figure: Performing DNS lookup and domain queries using nslookup and dig*
 
     <img src="Evidence%20files/dnsrecon_screenshot.png" width="800">
     
-   *Figure: Executing automated DNS enumeration via dnsrecon against medirozahospital.com*
+    *Figure: Executing automated DNS enumeration via dnsrecon against medirozahospital.com*
 
 * **Attack Execution & SQL Injection Discovery:** 
   * While analyzing the Patient Portal login functionality (`/patient/login.php`), input fields were tested for improper escaping. Entering specialized characters triggered an explicit database warning: `Warning: mysqli_query(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\'' at line 1`.
+    
     <img src="Evidence%20files/syntax_error.png" width="800">
   
     *Figure: Executing SQL injection authentication bypass on the Patient Portal login form*
@@ -72,9 +73,10 @@ This report covers the comprehensive penetration testing engagement conducted ag
   * This error confirms that the application directly concatenates user input into backend SQL queries without parameterization, exposing a high-severity SQL Injection vulnerability that facilitates authentication bypass.
 
 * **Milestone Deliverable:** Successfully identified the injection vector and retrieved **3 confidential patient PDF lab reports** following access bypass.
-  <img src="Evidence%20files/Lab_Reports_screenshot.png" width="800">
   
-   *Figure: Accessing the authenticated My Lab Reports dashboard displaying encrypted PDF files*
+    <img src="Evidence%20files/Lab_Reports_screenshot.png" width="800">
+  
+    *Figure: Accessing the authenticated My Lab Reports dashboard displaying encrypted PDF files*
 
 ### 🔑 Milestone 2: Data Extraction & Cryptographic Cracking
 * **Objective:** Crack the cryptographic encryption protecting all 3 retrieved patient PDF lab reports.
@@ -82,21 +84,32 @@ This report covers the comprehensive penetration testing engagement conducted ag
 * **Execution & Challenges:** 
   * Analyzed the specific encryption scheme protecting each document to determine the appropriate cracking methodology.
   * Tested various tools and customized wordlists, recognizing that a single brute-force approach would not succeed uniformly across all files.
-  <img src="Evidence%20files/Pdf1_password_screenshot.png" width="800">
-  <img src="Evidence%20files/Pdf2_password_screenshot.png" width="800">
-  <img src="Evidence%20files/Pdf3_password_screenshot.png" width="800">
+    
+   <img src="Evidence%20files/Pdf1_password_screenshot.png" width="800">
+  
+   *Figure: Cracking password hash for My Locked PDF1.pdf using the Networkwalks password cracker*
+  
+   <img src="Evidence%20files/Pdf2_password_screenshot.png" width="800">
+  
+   *Figure: Cracking password hash for My Locked PDF2.pdf using the Networkwalks password cracker*
+  
+   <img src="Evidence%20files/Pdf3_password_screenshot.png" width="800">
+  
+   *Figure: Cracking password hash for My Locked PDF3.pdf using the Networkwalks password cracker*
+  
 * **Milestone Deliverable:** Successfully recovered the plaintext contents of all 3 restricted files with verifiable proof of access.
-  <img src="Evidence%20files/Patient_report1_screenshot.png" width="800">
   
-  *Figure: Viewing the decrypted confidential pathology report for patient Sipho Dlamini*
-
-  <img src="Evidence%20files/Patient_report2_screenshot.png" width="800">
+   <img src="Evidence%20files/Patient_report1_screenshot.png" width="800">
   
-  *Figure: Viewing the decrypted confidential pathology report for patient Priya Reddy*
+   *Figure: Viewing the decrypted confidential pathology report for patient Sipho Dlamini*
 
-  <img src="Evidence%20files/Patient_report3_screenshot.png" width="800">
+   <img src="Evidence%20files/Patient_report2_screenshot.png" width="800">
+  
+   *Figure: Viewing the decrypted confidential pathology report for patient Priya Reddy*
+
+   <img src="Evidence%20files/Patient_report3_screenshot.png" width="800">
    
-  *Figure: Viewing the decrypted confidential pathology report for patient Emily Thompson*
+   *Figure: Viewing the decrypted confidential pathology report for patient Emily Thompson*
 
 
 ---
@@ -106,13 +119,27 @@ This report covers the comprehensive penetration testing engagement conducted ag
 * **Methodology:** Deep examination of retrieved file properties, metadata, directory enumeration, and hidden server paths.
 * **Findings & Discoveries:**
   * Conducted a thorough analysis beyond the obvious application content, examining all file properties carefully.
+    
     <img src="Evidence%20files/robots.txt.png" width="800">
+    
+     *Figure: Analyzing the robots.txt file to uncover sensitive internal administrative paths*
+    
   * Uncovered sensitive internal administrative files pointing to further critical server exposures.
+    
     <img src="Evidence%20files/website_old_path.png" width="800">
+    
+    *Figure: Uncovering sensitive internal administrative files and server path exposures*
+    
   * Successfully extracted the **salaries of all hospital employees** and the **shareholder details of the hospital**.
 * **Milestone Deliverable:** Full documented evidence of the server exposure and a readable summary of the confidential financial and corporate records uncovered.
-  <img src="Evidence%20files/staffs_info_sql_file.png" width="800">
-  <img src="Evidence%20files/shareholders_info_sql_file.png" width="800">
+  
+  <img src="Evidence%20files/Blur_staffs_info_sql_file.png" width="800">
+  
+   *Figure: Extracting hospital employee salaries and staff information from the SQL database file*
+  
+  <img src="Evidence%20files/Blur_shareholders_info_sql_file.png" width="800">
+
+   *Figure: Extracting hospital employee salaries and staff information from the SQL database file*
 
 ---
 
